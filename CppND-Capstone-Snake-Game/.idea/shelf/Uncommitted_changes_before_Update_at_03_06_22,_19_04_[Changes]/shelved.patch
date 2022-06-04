@@ -1,0 +1,69 @@
+Index: CMakeLists.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>cmake_minimum_required(VERSION 3.7)\nset(CMAKE_CXX_STANDARD 17)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\n\nadd_definitions(-std=c++17)\n\nset(CXX_FLAGS \"-Wall\")\nset(CMAKE_CXX_FLAGS, \"${CXX_FLAGS}\")\n\nproject(SDL2Test)\n\nset(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} \"${CMAKE_SOURCE_DIR}/cmake/\")\n\nfind_package(SDL2 REQUIRED)\ninclude_directories(${SDL2_INCLUDE_DIRS} src)\n\nadd_executable(SnakeGame src/main.cpp src/game.cpp src/controller.cpp src/renderer.cpp src/snake.cpp)\nstring(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)\ntarget_link_libraries(SnakeGame ${SDL2_LIBRARIES})\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	(revision a382d13cd2d095062ba2de011d94082d763c0a28)
++++ b/CMakeLists.txt	(date 1654275788183)
+@@ -9,11 +9,56 @@
+ 
+ project(SDL2Test)
+ 
++cmake_minimum_required(VERSION 3.5.1)
++
++# Add SDL2 CMake modules
++list(APPEND CMAKE_MODULE_PATH ${CMAKE_CURRENT_SOURCE_DIR}/cmake/sdl2)
++
++# Add all c source files under the src directory
++#file(GLOB SOURCES "src/*.c")
++#add_executable(${PROJECT_NAME} ${SOURCES})
++
++# Add all headers files under the include directory
++#target_include_directories(${PROJECT_NAME} PRIVATE include)
++
++#target_compile_options(${PROJECT_NAME} PRIVATE $<$<C_COMPILER_ID:MSVC>:/W4 /WX>)
++#target_compile_options(${PROJECT_NAME} PRIVATE $<$<NOT:$<C_COMPILER_ID:MSVC>>:-Wall -Wextra -pedantic -Werror>)
++
++#CFLAGS=`sdl2-config --cflags`
++#LFLAGS=`sdl2-config --libs` -lSDL2_ttf
++#
++
++#set(CMAKE_C_FLAGS "sdl2-config --cflags")
++#set(CMAKE_LF_FLAGS "sdl2-config --libs -lSDL2_ttf")
++
+ set(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} "${CMAKE_SOURCE_DIR}/cmake/")
+ 
+ find_package(SDL2 REQUIRED)
++#target_link_libraries(${PROJECT_NAME} SDL2::Main)
++#find_package(SDL2_image REQUIRED)
++#find_package(SDL2_gfx REQUIRED)
++#find_package(SDL2_ttf REQUIRED)
++#include_directories(${SDL2_TTF_INCLUDE_DIR})
++#target_link_libraries(${PROJECT_NAME} SDL2::TTF)
++
++# https://github.com/aminosbh/basic-c-sdl-game/tree/master/cmake/sdl2
++
++find_package(SDL2_ttf REQUIRED)
++#target_link_libraries(${PROJECT_NAME} SDL2::TTF)
++
++
++#file(COPY assets DESTINATION ${CMAKE_BINARY_DIR})
++
++#target_link_libraries(${PROJECT_NAME} SDL2::TTF)
++
++#find_library(SDL2TTF_LIBRARIES SDL_ttf)
++#target_link_libraries(untitled17 mingw32 SDL2main SDL2 SDL_ttf)
+ include_directories(${SDL2_INCLUDE_DIRS} src)
++include_directories(${SDL_TTF_INCLUDE_DIRS} src)
+ 
+-add_executable(SnakeGame src/main.cpp src/game.cpp src/controller.cpp src/renderer.cpp src/snake.cpp)
++add_executable(SnakeGame src/main.cpp src/game.cpp src/controller.cpp src/renderer.cpp src/snake.cpp
++        src/menu.h
++        src/menu.cpp src/menuflow.cpp src/menuflow.h src/gameState.h src/gameEntity.h src/menuChoice.cpp
++        src/menuChoice.h src/score.h src/score.cpp)
+ string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
+-target_link_libraries(SnakeGame ${SDL2_LIBRARIES})
++target_link_libraries(SnakeGame ${SDL2_LIBRARIES} ${SDL2_TTF_LIBRARIES})

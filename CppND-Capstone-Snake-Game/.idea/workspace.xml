@@ -1,0 +1,282 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CMakeRunConfigurationManager" shouldGenerate="true" shouldDeleteObsolete="true">
+    <generated />
+  </component>
+  <component name="CMakeSettings">
+    <configurations>
+      <configuration PROFILE_NAME="Debug" ENABLED="true" CONFIG_NAME="Debug" />
+    </configurations>
+  </component>
+  <component name="ChangeListManager">
+    <list default="true" id="a2889c44-5fff-482d-b54c-918334a69c9f" name="Changes" comment="update readme" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="ClangdSettings">
+    <option name="formatViaClangd" value="false" />
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_BRANCH_BY_REPOSITORY">
+      <map>
+        <entry key="$PROJECT_DIR$" value="develop" />
+      </map>
+    </option>
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+    <option name="UPDATE_TYPE" value="REBASE" />
+  </component>
+  <component name="ProjectId" id="29WWEgvHWWj838C8wfDisx3jp4f" />
+  <component name="ProjectViewState">
+    <option name="hideEmptyMiddlePackages" value="true" />
+    <option name="showLibraryContents" value="true" />
+  </component>
+  <component name="PropertiesComponent">
+    <property name="RunOnceActivity.OpenProjectViewOnStart" value="true" />
+    <property name="RunOnceActivity.ShowReadmeOnStart" value="true" />
+    <property name="RunOnceActivity.cidr.known.project.marker" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="cf.first.check.clang-format" value="false" />
+    <property name="cidr.known.project.marker" value="true" />
+    <property name="cmake.loaded.for.project" value="true" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="nodejs_package_manager_path" value="npm" />
+  </component>
+  <component name="RunManager">
+    <configuration default="true" type="CMakeRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.execution.CidrBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+    <configuration default="true" type="GradleAppRunConfiguration" factoryName="Application" REDIRECT_INPUT="false" ELEVATE="false" USE_EXTERNAL_CONSOLE="false" PASS_PARENT_ENVS_2="true">
+      <method v="2">
+        <option name="com.jetbrains.cidr.cpp.gradle.execution.GradleNativeBuildBeforeRunTaskProvider$BuildBeforeRunTask" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SpellCheckerSettings" RuntimeDictionaries="0" Folders="0" CustomDictionaries="0" DefaultDictionary="application-level" UseSingleDictionary="true" transferred="true" />
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="a2889c44-5fff-482d-b54c-918334a69c9f" name="Changes" comment="" />
+      <created>1653229211609</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1653229211609</updated>
+      <workItem from="1653229213441" duration="21347000" />
+      <workItem from="1653417098370" duration="7314000" />
+      <workItem from="1653576026422" duration="13558000" />
+      <workItem from="1653738836760" duration="4373000" />
+      <workItem from="1653743687934" duration="32254000" />
+      <workItem from="1653938271839" duration="10718000" />
+      <workItem from="1654108920713" duration="7235000" />
+      <workItem from="1654274752478" duration="1055000" />
+      <workItem from="1654275891649" duration="977000" />
+    </task>
+    <task id="LOCAL-00001" summary="Add proposal of project description on readme file">
+      <created>1653230321902</created>
+      <option name="number" value="00001" />
+      <option name="presentableId" value="LOCAL-00001" />
+      <option name="project" value="LOCAL" />
+      <updated>1653230321902</updated>
+    </task>
+    <task id="LOCAL-00002" summary="first try">
+      <created>1653235199500</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1653235199500</updated>
+    </task>
+    <task id="LOCAL-00003" summary="add EOF">
+      <created>1653238947060</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1653238947060</updated>
+    </task>
+    <task id="LOCAL-00004" summary="adjust project">
+      <created>1653242570964</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1653242570964</updated>
+    </task>
+    <task id="LOCAL-00005" summary="develop menus">
+      <created>1653242661442</created>
+      <option name="number" value="00005" />
+      <option name="presentableId" value="LOCAL-00005" />
+      <option name="project" value="LOCAL" />
+      <updated>1653242661442</updated>
+    </task>
+    <task id="LOCAL-00006" summary="create menu">
+      <created>1653336804877</created>
+      <option name="number" value="00006" />
+      <option name="presentableId" value="LOCAL-00006" />
+      <option name="project" value="LOCAL" />
+      <updated>1653336804877</updated>
+    </task>
+    <task id="LOCAL-00007" summary="first text output">
+      <created>1653581089665</created>
+      <option name="number" value="00007" />
+      <option name="presentableId" value="LOCAL-00007" />
+      <option name="project" value="LOCAL" />
+      <updated>1653581089665</updated>
+    </task>
+    <task id="LOCAL-00008" summary="title and options printed">
+      <created>1653584852938</created>
+      <option name="number" value="00008" />
+      <option name="presentableId" value="LOCAL-00008" />
+      <option name="project" value="LOCAL" />
+      <updated>1653584852938</updated>
+    </task>
+    <task id="LOCAL-00009" summary="print selection arrow">
+      <created>1653587222305</created>
+      <option name="number" value="00009" />
+      <option name="presentableId" value="LOCAL-00009" />
+      <option name="project" value="LOCAL" />
+      <updated>1653587222305</updated>
+    </task>
+    <task id="LOCAL-00010" summary="Pre and post menu">
+      <created>1653743834234</created>
+      <option name="number" value="00010" />
+      <option name="presentableId" value="LOCAL-00010" />
+      <option name="project" value="LOCAL" />
+      <updated>1653743834234</updated>
+    </task>
+    <task id="LOCAL-00011" summary="Pre and post menu">
+      <created>1653755815873</created>
+      <option name="number" value="00011" />
+      <option name="presentableId" value="LOCAL-00011" />
+      <option name="project" value="LOCAL" />
+      <updated>1653755815873</updated>
+    </task>
+    <task id="LOCAL-00012" summary="Change State enum">
+      <created>1653756101372</created>
+      <option name="number" value="00012" />
+      <option name="presentableId" value="LOCAL-00012" />
+      <option name="project" value="LOCAL" />
+      <updated>1653756101372</updated>
+    </task>
+    <task id="LOCAL-00013" summary="Add pointers">
+      <created>1653759711164</created>
+      <option name="number" value="00013" />
+      <option name="presentableId" value="LOCAL-00013" />
+      <option name="project" value="LOCAL" />
+      <updated>1653759711164</updated>
+    </task>
+    <task id="LOCAL-00014" summary="Generalize Controller">
+      <created>1653838805107</created>
+      <option name="number" value="00014" />
+      <option name="presentableId" value="LOCAL-00014" />
+      <option name="project" value="LOCAL" />
+      <updated>1653838805107</updated>
+    </task>
+    <task id="LOCAL-00015" summary="Code improvements">
+      <created>1653845356482</created>
+      <option name="number" value="00015" />
+      <option name="presentableId" value="LOCAL-00015" />
+      <option name="project" value="LOCAL" />
+      <updated>1653845356482</updated>
+    </task>
+    <task id="LOCAL-00016" summary="Code improvements">
+      <created>1653848197989</created>
+      <option name="number" value="00016" />
+      <option name="presentableId" value="LOCAL-00016" />
+      <option name="project" value="LOCAL" />
+      <updated>1653848197989</updated>
+    </task>
+    <task id="LOCAL-00017" summary="Print scores">
+      <created>1653858960382</created>
+      <option name="number" value="00017" />
+      <option name="presentableId" value="LOCAL-00017" />
+      <option name="project" value="LOCAL" />
+      <updated>1653858960382</updated>
+    </task>
+    <task id="LOCAL-00018" summary="Remove comment">
+      <created>1653938654718</created>
+      <option name="number" value="00018" />
+      <option name="presentableId" value="LOCAL-00018" />
+      <option name="project" value="LOCAL" />
+      <updated>1653938654718</updated>
+    </task>
+    <task id="LOCAL-00019" summary="code improvement">
+      <created>1653945165004</created>
+      <option name="number" value="00019" />
+      <option name="presentableId" value="LOCAL-00019" />
+      <option name="project" value="LOCAL" />
+      <updated>1653945165004</updated>
+    </task>
+    <task id="LOCAL-00020" summary="thread">
+      <created>1654275741155</created>
+      <option name="number" value="00020" />
+      <option name="presentableId" value="LOCAL-00020" />
+      <option name="project" value="LOCAL" />
+      <updated>1654275741155</updated>
+    </task>
+    <task id="LOCAL-00021" summary="strip trailing spaces linking libs">
+      <created>1654276018559</created>
+      <option name="number" value="00021" />
+      <option name="presentableId" value="LOCAL-00021" />
+      <option name="project" value="LOCAL" />
+      <updated>1654276018559</updated>
+    </task>
+    <task id="LOCAL-00022" summary="update readme">
+      <created>1654276223331</created>
+      <option name="number" value="00022" />
+      <option name="presentableId" value="LOCAL-00022" />
+      <option name="project" value="LOCAL" />
+      <updated>1654276223331</updated>
+    </task>
+    <option name="localTasksCounter" value="23" />
+    <servers />
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="3" />
+  </component>
+  <component name="Vcs.Log.Tabs.Properties">
+    <option name="TAB_STATES">
+      <map>
+        <entry key="MAIN">
+          <value>
+            <State />
+          </value>
+        </entry>
+      </map>
+    </option>
+    <option name="oldMeFiltersMigrated" value="true" />
+  </component>
+  <component name="VcsManagerConfiguration">
+    <MESSAGE value="Add proposal of project description on readme file" />
+    <MESSAGE value="first try" />
+    <MESSAGE value="add EOF" />
+    <MESSAGE value="adjust project" />
+    <MESSAGE value="develop menus" />
+    <MESSAGE value="create menu" />
+    <MESSAGE value="first text output" />
+    <MESSAGE value="title and options printed" />
+    <MESSAGE value="print selection arrow" />
+    <MESSAGE value="Pre and post menu" />
+    <MESSAGE value="Change State enum" />
+    <MESSAGE value="Add pointers" />
+    <MESSAGE value="Generalize Controller" />
+    <MESSAGE value="Code improvements" />
+    <MESSAGE value="Print scores" />
+    <MESSAGE value="Remove comment" />
+    <MESSAGE value="code improvement" />
+    <MESSAGE value="thread" />
+    <MESSAGE value="strip trailing spaces linking libs" />
+    <MESSAGE value="update readme" />
+    <option name="LAST_COMMIT_MESSAGE" value="update readme" />
+  </component>
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <line-breakpoint enabled="true" type="com.jetbrains.cidr.execution.debugger.OCBreakpointType">
+          <url>file://$PROJECT_DIR$/src/renderer.cpp</url>
+          <line>182</line>
+          <option name="timeStamp" value="14" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+</project>

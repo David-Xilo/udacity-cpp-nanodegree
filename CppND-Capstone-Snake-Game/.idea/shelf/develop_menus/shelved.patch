@@ -1,0 +1,554 @@
+Index: src/game.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#ifndef GAME_H\n#define GAME_H\n\n#include <random>\n#include \"SDL.h\"\n#include \"controller.h\"\n#include \"renderer.h\"\n#include \"snake.h\"\n\nclass Game {\n public:\n  Game(std::size_t grid_width, std::size_t grid_height);\n  void Run(Controller const &controller, Renderer &renderer,\n           std::size_t target_frame_duration);\n  int GetScore() const;\n  int GetSize() const;\n\n private:\n  Snake snake;\n  SDL_Point food;\n\n  std::random_device dev;\n  std::mt19937 engine;\n  std::uniform_int_distribution<int> random_w;\n  std::uniform_int_distribution<int> random_h;\n\n  int score{0};\n\n  void PlaceFood();\n  void Update();\n};\n\n#endif
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/game.h b/src/game.h
+--- a/src/game.h	(revision a5c2064ce067b9c0ea252f16352584b30b0bcf53)
++++ b/src/game.h	(date 1653240339359)
+@@ -10,7 +10,7 @@
+ class Game {
+  public:
+   Game(std::size_t grid_width, std::size_t grid_height);
+-  void Run(Controller const &controller, Renderer &renderer,
++  void run(Controller const &controller, Renderer &renderer,
+            std::size_t target_frame_duration);
+   int GetScore() const;
+   int GetSize() const;
+Index: CMakeLists.txt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>cmake_minimum_required(VERSION 3.7)\nset(CMAKE_CXX_STANDARD 17)\nset(CMAKE_CXX_STANDARD_REQUIRED ON)\n\nadd_definitions(-std=c++17)\n\nset(CXX_FLAGS \"-Wall\")\nset(CMAKE_CXX_FLAGS, \"${CXX_FLAGS}\")\n\nproject(SDL2Test)\n\nset(CMAKE_MODULE_PATH ${CMAKE_MODULE_PATH} \"${CMAKE_SOURCE_DIR}/cmake/\")\n\nfind_package(SDL2 REQUIRED)\ninclude_directories(${SDL2_INCLUDE_DIRS} src)\n\nadd_executable(SnakeGame src/main.cpp src/game.cpp src/controller.cpp src/renderer.cpp src/snake.cpp)\nstring(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)\ntarget_link_libraries(SnakeGame ${SDL2_LIBRARIES})\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/CMakeLists.txt b/CMakeLists.txt
+--- a/CMakeLists.txt	(revision a5c2064ce067b9c0ea252f16352584b30b0bcf53)
++++ b/CMakeLists.txt	(date 1653239543783)
+@@ -14,6 +14,7 @@
+ find_package(SDL2 REQUIRED)
+ include_directories(${SDL2_INCLUDE_DIRS} src)
+ 
+-add_executable(SnakeGame src/main.cpp src/game.cpp src/controller.cpp src/renderer.cpp src/snake.cpp)
++add_executable(SnakeGame src/main.cpp src/game.cpp src/controller.cpp src/renderer.cpp src/snake.cpp src/menu.h
++        src/menu.cpp src/menuflow.cpp src/menuflow.h)
+ string(STRIP ${SDL2_LIBRARIES} SDL2_LIBRARIES)
+ target_link_libraries(SnakeGame ${SDL2_LIBRARIES})
+Index: src/controller.cpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#include \"controller.h\"\n#include <iostream>\n#include \"SDL.h\"\n#include \"snake.h\"\n\nvoid Controller::ChangeDirection(Snake &snake, Snake::Direction input,\n                                 Snake::Direction opposite) const {\n  if (snake.direction != opposite || snake.size == 1) snake.direction = input;\n  return;\n}\n\nvoid Controller::HandleInput(bool &running, Snake &snake) const {\n  SDL_Event e;\n  while (SDL_PollEvent(&e)) {\n    if (e.type == SDL_QUIT) {\n      running = false;\n    } else if (e.type == SDL_KEYDOWN) {\n      switch (e.key.keysym.sym) {\n        case SDLK_UP:\n          ChangeDirection(snake, Snake::Direction::kUp,\n                          Snake::Direction::kDown);\n          break;\n\n        case SDLK_DOWN:\n          ChangeDirection(snake, Snake::Direction::kDown,\n                          Snake::Direction::kUp);\n          break;\n\n        case SDLK_LEFT:\n          ChangeDirection(snake, Snake::Direction::kLeft,\n                          Snake::Direction::kRight);\n          break;\n\n        case SDLK_RIGHT:\n          ChangeDirection(snake, Snake::Direction::kRight,\n                          Snake::Direction::kLeft);\n          break;\n      }\n    }\n  }\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller.cpp b/src/controller.cpp
+--- a/src/controller.cpp	(revision a5c2064ce067b9c0ea252f16352584b30b0bcf53)
++++ b/src/controller.cpp	(date 1653242570856)
+@@ -2,14 +2,15 @@
+ #include <iostream>
+ #include "SDL.h"
+ #include "snake.h"
++#include "menu.h"
+ 
+-void Controller::ChangeDirection(Snake &snake, Snake::Direction input,
+-                                 Snake::Direction opposite) const {
++void Controller::changeSnakeDirection(Snake &snake, Snake::Direction input,
++                                      Snake::Direction opposite) const {
+   if (snake.direction != opposite || snake.size == 1) snake.direction = input;
+   return;
+ }
+ 
+-void Controller::HandleInput(bool &running, Snake &snake) const {
++void Controller::handleGameInput(bool &running, Snake &snake) const {
+   SDL_Event e;
+   while (SDL_PollEvent(&e)) {
+     if (e.type == SDL_QUIT) {
+@@ -17,25 +18,61 @@
+     } else if (e.type == SDL_KEYDOWN) {
+       switch (e.key.keysym.sym) {
+         case SDLK_UP:
+-          ChangeDirection(snake, Snake::Direction::kUp,
+-                          Snake::Direction::kDown);
++          changeSnakeDirection(snake, Snake::Direction::kUp,
++                               Snake::Direction::kDown);
+           break;
+ 
+         case SDLK_DOWN:
+-          ChangeDirection(snake, Snake::Direction::kDown,
+-                          Snake::Direction::kUp);
++          changeSnakeDirection(snake, Snake::Direction::kDown,
++                               Snake::Direction::kUp);
+           break;
+ 
+         case SDLK_LEFT:
+-          ChangeDirection(snake, Snake::Direction::kLeft,
+-                          Snake::Direction::kRight);
++          changeSnakeDirection(snake, Snake::Direction::kLeft,
++                               Snake::Direction::kRight);
+           break;
+ 
+         case SDLK_RIGHT:
+-          ChangeDirection(snake, Snake::Direction::kRight,
+-                          Snake::Direction::kLeft);
+-          break;
++          changeSnakeDirection(snake, Snake::Direction::kRight,
++                               Snake::Direction::kLeft);
++          break;
++      }
++    }
++  }
++}
++
++void Controller::changeMenuOption(Menu &menu) const {
++  if (snake.direction != opposite || snake.size == 1) snake.direction = input;
++  return;
++}
++
++void Controller::handleMenuInput(bool &running) const {
++  SDL_Event e;
++  while (SDL_PollEvent(&e)) {
++    if (e.type == SDL_QUIT) {
++      running = false;
++    } else if (e.type == SDL_KEYDOWN) {
++      switch (e.key.keysym.sym) {
++        case SDLK_UP:
++          changeSnakeDirection(snake, Snake::Direction::kUp,
++                               Snake::Direction::kDown);
++              break;
++
++        case SDLK_DOWN:
++          changeSnakeDirection(snake, Snake::Direction::kDown,
++                               Snake::Direction::kUp);
++              break;
++
++        case SDLK_LEFT:
++          changeSnakeDirection(snake, Snake::Direction::kLeft,
++                               Snake::Direction::kRight);
++              break;
++
++        case SDLK_RIGHT:
++          changeSnakeDirection(snake, Snake::Direction::kRight,
++                               Snake::Direction::kLeft);
++              break;
+       }
+     }
+   }
+-}
+\ No newline at end of file
++}
+Index: src/renderer.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#ifndef RENDERER_H\n#define RENDERER_H\n\n#include <vector>\n#include \"SDL.h\"\n#include \"snake.h\"\n\nclass Renderer {\n public:\n  Renderer(const std::size_t screen_width, const std::size_t screen_height,\n           const std::size_t grid_width, const std::size_t grid_height);\n  ~Renderer();\n\n  void Render(Snake const snake, SDL_Point const &food);\n  void UpdateWindowTitle(int score, int fps);\n\n private:\n  SDL_Window *sdl_window;\n  SDL_Renderer *sdl_renderer;\n\n  const std::size_t screen_width;\n  const std::size_t screen_height;\n  const std::size_t grid_width;\n  const std::size_t grid_height;\n};\n\n#endif
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/renderer.h b/src/renderer.h
+--- a/src/renderer.h	(revision a5c2064ce067b9c0ea252f16352584b30b0bcf53)
++++ b/src/renderer.h	(date 1653240703867)
+@@ -2,18 +2,22 @@
+ #define RENDERER_H
+ 
+ #include <vector>
++#include <string>
+ #include "SDL.h"
++#include "SDL_ttf.h"
+ #include "snake.h"
+ 
+ class Renderer {
+  public:
+-  Renderer(const std::size_t screen_width, const std::size_t screen_height,
+-           const std::size_t grid_width, const std::size_t grid_height);
++  Renderer(std::size_t screen_width, std::size_t screen_height,
++           std::size_t grid_width, std::size_t grid_height);
+   ~Renderer();
+ 
+-  void Render(Snake const snake, SDL_Point const &food);
+   void UpdateWindowTitle(int score, int fps);
+ 
++  void renderSnakeGame(Snake const& snake, SDL_Point const &food);
++  void renderMenu(std::string const& menuText, const std::vector<std::string> &options);
++
+  private:
+   SDL_Window *sdl_window;
+   SDL_Renderer *sdl_renderer;
+@@ -22,6 +26,7 @@
+   const std::size_t screen_height;
+   const std::size_t grid_width;
+   const std::size_t grid_height;
++  void clearScreen();
+ };
+ 
+ #endif
+\ No newline at end of file
+Index: src/renderer.cpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#include \"renderer.h\"\n#include <iostream>\n#include <string>\n\nRenderer::Renderer(const std::size_t screen_width,\n                   const std::size_t screen_height,\n                   const std::size_t grid_width, const std::size_t grid_height)\n    : screen_width(screen_width),\n      screen_height(screen_height),\n      grid_width(grid_width),\n      grid_height(grid_height) {\n  // Initialize SDL\n  if (SDL_Init(SDL_INIT_VIDEO) < 0) {\n    std::cerr << \"SDL could not initialize.\\n\";\n    std::cerr << \"SDL_Error: \" << SDL_GetError() << \"\\n\";\n  }\n\n  // Create Window\n  sdl_window = SDL_CreateWindow(\"Snake Game\", SDL_WINDOWPOS_CENTERED,\n                                SDL_WINDOWPOS_CENTERED, screen_width,\n                                screen_height, SDL_WINDOW_SHOWN);\n\n  if (nullptr == sdl_window) {\n    std::cerr << \"Window could not be created.\\n\";\n    std::cerr << \" SDL_Error: \" << SDL_GetError() << \"\\n\";\n  }\n\n  // Create renderer\n  sdl_renderer = SDL_CreateRenderer(sdl_window, -1, SDL_RENDERER_ACCELERATED);\n  if (nullptr == sdl_renderer) {\n    std::cerr << \"Renderer could not be created.\\n\";\n    std::cerr << \"SDL_Error: \" << SDL_GetError() << \"\\n\";\n  }\n}\n\nRenderer::~Renderer() {\n  SDL_DestroyWindow(sdl_window);\n  SDL_Quit();\n}\n\nvoid Renderer::Render(Snake const snake, SDL_Point const &food) {\n  SDL_Rect block;\n  block.w = screen_width / grid_width;\n  block.h = screen_height / grid_height;\n\n  // Clear screen\n  SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);\n  SDL_RenderClear(sdl_renderer);\n\n  // Render food\n  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xCC, 0x00, 0xFF);\n  block.x = food.x * block.w;\n  block.y = food.y * block.h;\n  SDL_RenderFillRect(sdl_renderer, &block);\n\n  // Render snake's body\n  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);\n  for (SDL_Point const &point : snake.body) {\n    block.x = point.x * block.w;\n    block.y = point.y * block.h;\n    SDL_RenderFillRect(sdl_renderer, &block);\n  }\n\n  // Render snake's head\n  block.x = static_cast<int>(snake.head_x) * block.w;\n  block.y = static_cast<int>(snake.head_y) * block.h;\n  if (snake.alive) {\n    SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);\n  } else {\n    SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF);\n  }\n  SDL_RenderFillRect(sdl_renderer, &block);\n\n  // Update Screen\n  SDL_RenderPresent(sdl_renderer);\n}\n\nvoid Renderer::UpdateWindowTitle(int score, int fps) {\n  std::string title{\"Snake Score: \" + std::to_string(score) + \" FPS: \" + std::to_string(fps)};\n  SDL_SetWindowTitle(sdl_window, title.c_str());\n}\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/renderer.cpp b/src/renderer.cpp
+--- a/src/renderer.cpp	(revision a5c2064ce067b9c0ea252f16352584b30b0bcf53)
++++ b/src/renderer.cpp	(date 1653241469111)
+@@ -38,44 +38,79 @@
+   SDL_Quit();
+ }
+ 
+-void Renderer::Render(Snake const snake, SDL_Point const &food) {
+-  SDL_Rect block;
+-  block.w = screen_width / grid_width;
+-  block.h = screen_height / grid_height;
++void Renderer::UpdateWindowTitle(int score, int fps) {
++  std::string title{"Snake Score: " + std::to_string(score) + " FPS: " + std::to_string(fps)};
++  SDL_SetWindowTitle(sdl_window, title.c_str());
++}
++
++// https://gigi.nullneuron.net/gigilabs/displaying-text-in-sdl2-with-sdl_ttf/
++void Renderer::renderMenu(std::string const& menuText, const std::vector<std::string>& options) {
++    TTF_Init();
++
++    if ( TTF_Init() < 0 ) {
++        std::cout << "Error initializing SDL_ttf: " << TTF_GetError() << std::endl;
++    }
++
++    TTF_Font * font = TTF_OpenFont("arial.ttf", 25);
++    SDL_Color color = { 255, 255, 255 };
++
++    SDL_Surface* text = TTF_RenderText_Solid( font, "Hello World!", color );
++    if ( !text ) {
++        std::cout << "Failed to render text: " << TTF_GetError() << std::endl;
++    }
++
++    SDL_Texture* text_texture;
++
++    text_texture = SDL_CreateTextureFromSurface( sdl_renderer, text );
++
++    SDL_Rect dest = { 0, 0, text->w, text->h };
++
++    SDL_RenderCopy( sdl_renderer, text_texture, nullptr, &dest );
++
++
++    SDL_DestroyTexture( text_texture );
++    SDL_FreeSurface( text );
++    TTF_CloseFont(font);
++    TTF_Quit();
++}
++
++void Renderer::renderSnakeGame(Snake const& snake, SDL_Point const &food) {
++    SDL_Rect block;
++    block.w = screen_width / grid_width;
++    block.h = screen_height / grid_height;
+ 
+-  // Clear screen
+-  SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
+-  SDL_RenderClear(sdl_renderer);
++    clearScreen();
+ 
+-  // Render food
+-  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xCC, 0x00, 0xFF);
+-  block.x = food.x * block.w;
+-  block.y = food.y * block.h;
+-  SDL_RenderFillRect(sdl_renderer, &block);
++    // Render food
++    SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xCC, 0x00, 0xFF);
++    block.x = food.x * block.w;
++    block.y = food.y * block.h;
++    SDL_RenderFillRect(sdl_renderer, &block);
+ 
+-  // Render snake's body
+-  SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
+-  for (SDL_Point const &point : snake.body) {
+-    block.x = point.x * block.w;
+-    block.y = point.y * block.h;
+-    SDL_RenderFillRect(sdl_renderer, &block);
+-  }
++    // Render snake's body
++    SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0xFF, 0xFF, 0xFF);
++    for (SDL_Point const &point : snake.body) {
++        block.x = point.x * block.w;
++        block.y = point.y * block.h;
++        SDL_RenderFillRect(sdl_renderer, &block);
++    }
+ 
+-  // Render snake's head
+-  block.x = static_cast<int>(snake.head_x) * block.w;
+-  block.y = static_cast<int>(snake.head_y) * block.h;
+-  if (snake.alive) {
+-    SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
+-  } else {
+-    SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF);
+-  }
+-  SDL_RenderFillRect(sdl_renderer, &block);
++    // Render snake's head
++    block.x = static_cast<int>(snake.head_x) * block.w;
++    block.y = static_cast<int>(snake.head_y) * block.h;
++    if (snake.alive) {
++        SDL_SetRenderDrawColor(sdl_renderer, 0x00, 0x7A, 0xCC, 0xFF);
++    } else {
++        SDL_SetRenderDrawColor(sdl_renderer, 0xFF, 0x00, 0x00, 0xFF);
++    }
++    SDL_RenderFillRect(sdl_renderer, &block);
+ 
+-  // Update Screen
+-  SDL_RenderPresent(sdl_renderer);
++    // Update Screen
++    SDL_RenderPresent(sdl_renderer);
+ }
+ 
+-void Renderer::UpdateWindowTitle(int score, int fps) {
+-  std::string title{"Snake Score: " + std::to_string(score) + " FPS: " + std::to_string(fps)};
+-  SDL_SetWindowTitle(sdl_window, title.c_str());
++void Renderer::clearScreen() {
++    // Clear screen
++    SDL_SetRenderDrawColor(sdl_renderer, 0x1E, 0x1E, 0x1E, 0xFF);
++    SDL_RenderClear(sdl_renderer);
+ }
+Index: src/main.cpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#include <iostream>\n#include \"controller.h\"\n#include \"game.h\"\n#include \"renderer.h\"\n\nint main() {\n  constexpr std::size_t kFramesPerSecond{60};\n  constexpr std::size_t kMsPerFrame{1000 / kFramesPerSecond};\n  constexpr std::size_t kScreenWidth{640};\n  constexpr std::size_t kScreenHeight{640};\n  constexpr std::size_t kGridWidth{32};\n  constexpr std::size_t kGridHeight{32};\n\n  Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);\n  Controller controller;\n  Game game(kGridWidth, kGridHeight);\n  game.Run(controller, renderer, kMsPerFrame);\n  std::cout << \"Game has terminated successfully!\\n\";\n  std::cout << \"Score: \" << game.GetScore() << \"\\n\";\n  std::cout << \"Size: \" << game.GetSize() << \"\\n\";\n  return 0;\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/main.cpp b/src/main.cpp
+--- a/src/main.cpp	(revision a5c2064ce067b9c0ea252f16352584b30b0bcf53)
++++ b/src/main.cpp	(date 1653240339359)
+@@ -2,6 +2,7 @@
+ #include "controller.h"
+ #include "game.h"
+ #include "renderer.h"
++#include "menuflow.h"
+ 
+ int main() {
+   constexpr std::size_t kFramesPerSecond{60};
+@@ -13,10 +14,13 @@
+ 
+   Renderer renderer(kScreenWidth, kScreenHeight, kGridWidth, kGridHeight);
+   Controller controller;
+-  Game game(kGridWidth, kGridHeight);
+-  game.Run(controller, renderer, kMsPerFrame);
+-  std::cout << "Game has terminated successfully!\n";
+-  std::cout << "Score: " << game.GetScore() << "\n";
+-  std::cout << "Size: " << game.GetSize() << "\n";
++  MenuFlow menuFlow(kGridWidth, kGridHeight);
++  menuFlow.Run(controller, renderer, kMsPerFrame);
++//  Game game(kGridWidth, kGridHeight);
++//  game.run(controller, renderer, kMsPerFrame);
++
++//  std::cout << "Game has terminated successfully!\n";
++//  std::cout << "Score: " << game.GetScore() << "\n";
++//  std::cout << "Size: " << game.GetSize() << "\n";
+   return 0;
+ }
+\ No newline at end of file
+Index: src/controller.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#ifndef CONTROLLER_H\n#define CONTROLLER_H\n\n#include \"snake.h\"\n\nclass Controller {\n public:\n  void HandleInput(bool &running, Snake &snake) const;\n\n private:\n  void ChangeDirection(Snake &snake, Snake::Direction input,\n                       Snake::Direction opposite) const;\n};\n\n#endif
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/controller.h b/src/controller.h
+--- a/src/controller.h	(revision a5c2064ce067b9c0ea252f16352584b30b0bcf53)
++++ b/src/controller.h	(date 1653242570852)
+@@ -5,11 +5,13 @@
+ 
+ class Controller {
+  public:
+-  void HandleInput(bool &running, Snake &snake) const;
++  void handleGameInput(bool &running, Snake &snake) const;
+ 
+  private:
+-  void ChangeDirection(Snake &snake, Snake::Direction input,
+-                       Snake::Direction opposite) const;
++  void changeSnakeDirection(Snake &snake, Snake::Direction input,
++                            Snake::Direction opposite) const;
++
++    void handleMenuInput(bool &running) const;
+ };
+ 
+ #endif
+\ No newline at end of file
+Index: src/menuflow.cpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/menuflow.cpp b/src/menuflow.cpp
+new file mode 100644
+--- /dev/null	(date 1653242570860)
++++ b/src/menuflow.cpp	(date 1653242570860)
+@@ -0,0 +1,19 @@
++#include "menuflow.h"
++
++MenuFlow::MenuFlow(std::size_t grid_width, std::size_t grid_height): currentState(GameState::preMenu)
++                , game(grid_width, grid_height) {
++}
++
++void MenuFlow::Run(Controller const &controller, Renderer &renderer,
++               std::size_t target_frame_duration) {
++    switch (currentState) {
++        case GameState::singlePlayer :
++            game.run(controller, renderer, target_frame_duration);
++            break;
++        case GameState::preMenu :
++            break;
++        case GameState::postMenu :
++            break;
++    }
++}
++
+Index: src/menuflow.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/menuflow.h b/src/menuflow.h
+new file mode 100644
+--- /dev/null	(date 1653242570848)
++++ b/src/menuflow.h	(date 1653242570848)
+@@ -0,0 +1,22 @@
++#ifndef SDL2TEST_MENUFLOW_H
++#define SDL2TEST_MENUFLOW_H
++
++#include "game.h"
++
++enum class GameState {
++    preMenu, singlePlayer, postMenu
++};
++
++class MenuFlow {
++public:
++    MenuFlow(std::size_t grid_width, std::size_t grid_height);
++
++    void Run(Controller const &controller, Renderer &renderer,
++             std::size_t target_frame_duration);
++
++private:
++    GameState currentState;
++    Game game;
++};
++
++#endif //SDL2TEST_MENUFLOW_H
+Index: src/menu.cpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/menu.cpp b/src/menu.cpp
+new file mode 100644
+--- /dev/null	(date 1653242570852)
++++ b/src/menu.cpp	(date 1653242570852)
+@@ -0,0 +1,46 @@
++#include "menu.h"
++
++Menu::Menu(std::string mText, std::vector<std::string> opt) {
++
++}
++
++void Menu::menu(const Controller &controller,
++                Renderer &renderer,
++                std::size_t target_frame_duration) {
++    Uint32 title_timestamp = SDL_GetTicks();
++    Uint32 frame_start;
++    Uint32 frame_end;
++    Uint32 frame_duration;
++    int frame_count = 0;
++    bool running = true;
++
++    while (running) {
++        frame_start = SDL_GetTicks();
++
++        // Input, Update, Render - the main game loop.
++        controller.handleGameInput(running, snake);
++//        Update();
++        renderer.renderMenu("Do you wanna play?", std::vector<std::string>("yes", "no"));
++
++        frame_end = SDL_GetTicks();
++
++        // Keep track of how long each loop through the input/update/render cycle
++        // takes.
++        frame_count++;
++        frame_duration = frame_end - frame_start;
++
++        // After every second, update the window title.
++        if (frame_end - title_timestamp >= 1000) {
++//            renderer.UpdateWindowTitle(score, frame_count);
++            frame_count = 0;
++            title_timestamp = frame_end;
++        }
++
++        // If the time for this frame is too small (i.e. frame_duration is
++        // smaller than the target ms_per_frame), delay the loop to
++        // achieve the correct frame rate.
++        if (frame_duration < target_frame_duration) {
++            SDL_Delay(target_frame_duration - frame_duration);
++        }
++    }
++}
+Index: src/game.cpp
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>#include \"game.h\"\n#include <iostream>\n#include \"SDL.h\"\n\nGame::Game(std::size_t grid_width, std::size_t grid_height)\n    : snake(grid_width, grid_height),\n      engine(dev()),\n      random_w(0, static_cast<int>(grid_width - 1)),\n      random_h(0, static_cast<int>(grid_height - 1)) {\n  PlaceFood();\n}\n\nvoid Game::Run(Controller const &controller, Renderer &renderer,\n               std::size_t target_frame_duration) {\n  Uint32 title_timestamp = SDL_GetTicks();\n  Uint32 frame_start;\n  Uint32 frame_end;\n  Uint32 frame_duration;\n  int frame_count = 0;\n  bool running = true;\n\n  while (running) {\n    frame_start = SDL_GetTicks();\n\n    // Input, Update, Render - the main game loop.\n    controller.HandleInput(running, snake);\n    Update();\n    renderer.Render(snake, food);\n\n    frame_end = SDL_GetTicks();\n\n    // Keep track of how long each loop through the input/update/render cycle\n    // takes.\n    frame_count++;\n    frame_duration = frame_end - frame_start;\n\n    // After every second, update the window title.\n    if (frame_end - title_timestamp >= 1000) {\n      renderer.UpdateWindowTitle(score, frame_count);\n      frame_count = 0;\n      title_timestamp = frame_end;\n    }\n\n    // If the time for this frame is too small (i.e. frame_duration is\n    // smaller than the target ms_per_frame), delay the loop to\n    // achieve the correct frame rate.\n    if (frame_duration < target_frame_duration) {\n      SDL_Delay(target_frame_duration - frame_duration);\n    }\n  }\n}\n\nvoid Game::PlaceFood() {\n  int x, y;\n  while (true) {\n    x = random_w(engine);\n    y = random_h(engine);\n    // Check that the location is not occupied by a snake item before placing\n    // food.\n    if (!snake.SnakeCell(x, y)) {\n      food.x = x;\n      food.y = y;\n      return;\n    }\n  }\n}\n\nvoid Game::Update() {\n  if (!snake.alive) return;\n\n  snake.Update();\n\n  int new_x = static_cast<int>(snake.head_x);\n  int new_y = static_cast<int>(snake.head_y);\n\n  // Check if there's food over here\n  if (food.x == new_x && food.y == new_y) {\n    score++;\n    PlaceFood();\n    // Grow snake and increase speed.\n    snake.GrowBody();\n    snake.speed += 0.02;\n  }\n}\n\nint Game::GetScore() const { return score; }\nint Game::GetSize() const { return snake.size; }\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/game.cpp b/src/game.cpp
+--- a/src/game.cpp	(revision a5c2064ce067b9c0ea252f16352584b30b0bcf53)
++++ b/src/game.cpp	(date 1653242570860)
+@@ -10,7 +10,7 @@
+   PlaceFood();
+ }
+ 
+-void Game::Run(Controller const &controller, Renderer &renderer,
++void Game::run(Controller const &controller, Renderer &renderer,
+                std::size_t target_frame_duration) {
+   Uint32 title_timestamp = SDL_GetTicks();
+   Uint32 frame_start;
+@@ -23,9 +23,9 @@
+     frame_start = SDL_GetTicks();
+ 
+     // Input, Update, Render - the main game loop.
+-    controller.HandleInput(running, snake);
++      controller.handleGameInput(running, snake);
+     Update();
+-    renderer.Render(snake, food);
++    renderer.renderSnakeGame(snake, food);
+ 
+     frame_end = SDL_GetTicks();
+ 
+Index: src/menu.h
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+diff --git a/src/menu.h b/src/menu.h
+new file mode 100644
+--- /dev/null	(date 1653242570840)
++++ b/src/menu.h	(date 1653242570840)
+@@ -0,0 +1,22 @@
++#ifndef SDL2TEST_MENU_H
++#define SDL2TEST_MENU_H
++
++
++#include "controller.h"
++#include "renderer.h"
++
++class Menu {
++public:
++    Menu(std::string mText, std::vector<std::string> opt);
++
++    void menu(Controller const &controller, Renderer &renderer,
++              std::size_t target_frame_duration);
++
++private:
++    std::string menuText;
++    std::vector<std::string> options;
++
++};
++
++
++#endif //SDL2TEST_MENU_H
